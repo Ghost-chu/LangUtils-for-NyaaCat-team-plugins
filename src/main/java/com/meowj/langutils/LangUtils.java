@@ -11,6 +11,8 @@ package com.meowj.langutils;
 
 import com.meowj.langutils.lang.LanguageRegistry;
 import com.meowj.langutils.lang.convert.EnumLang;
+import com.meowj.langutils.locale.LocaleHelper;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,6 +36,9 @@ public class LangUtils extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         this.config = getConfig();
+        LocaleHelper.loadEnchi18n();
+        LocaleHelper.loadItemi18n();
+        //LocaleHelper.loadPotioni18n();
         if (getServer().getName().contains("Cauldron") || getServer().getName().contains("MCPC")) {
             isCauldron = true;
             warn("This API is not designed for Cauldron/KCauldron server, but it should work without problems for VANILLA items/entities. Again, you cannot use this API with items/entities in mods.");

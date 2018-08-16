@@ -13,7 +13,9 @@ package com.meowj.langutils.lang;
 import com.meowj.langutils.LangUtils;
 import com.meowj.langutils.lang.convert.*;
 import com.meowj.langutils.locale.LocaleHelper;
+
 import org.bukkit.Material;
+import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -67,10 +69,8 @@ public class LanguageHelper {
         // Potion & SpawnEgg & Player Skull
         if (item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION || item.getType() == Material.LINGERING_POTION || item.getType() == Material.TIPPED_ARROW)
             return EnumPotionEffect.getLocalizedName(item, locale);
-        else if (item.getType() == Material.MONSTER_EGG)
-            return EnumEntity.getSpawnEggName(item, locale);
-        else if (item.getType() == Material.SKULL_ITEM && item.getDurability() == 3) // is player's skull
-            return EnumItem.getPlayerSkullName(item, locale);
+        else if ((item.getType() == Material.PLAYER_HEAD ||item.getType() == Material.PLAYER_WALL_HEAD) && item.getDurability() == 3) // is player's skull
+            return ((Skull)item).getOwningPlayer().getName()+"'s Head";
 
         return translateToLocal(getItemUnlocalizedName(item), locale);
     }
@@ -93,8 +93,11 @@ public class LanguageHelper {
      * @return The unlocalized name. If the item doesn't have a unlocalized name, this method will return the Material of it.
      */
     public static String getItemUnlocalizedName(ItemStack item) {
-        EnumItem enumItem = EnumItem.get(new ItemEntry(item));
-        return enumItem != null ? enumItem.getUnlocalizedName() : item.getType().toString();
+        if(item.hasItemMeta()&&item.getItemMeta().hasDisplayName()) {
+        	return item.getItemMeta().getDisplayName();
+        }else {
+        	return LocaleHelper.getItemi18n(item.getType().name());
+        }
     }
 
     /**
@@ -228,8 +231,9 @@ public class LanguageHelper {
      */
     public static String getEnchantmentUnlocalizedName(Enchantment enchantment) {
         EnumEnchantment enumEnch = EnumEnchantment.get(enchantment);
-        return (enumEnch != null ? enumEnch.getUnlocalizedName() : enchantment.getName());
-    }
+        return (enumEnch != null ? enumEnch.getUnlocalizedName() : enchantment.getName());}
+    
+    
 
     /**
      * Return the name of the enchantment.
